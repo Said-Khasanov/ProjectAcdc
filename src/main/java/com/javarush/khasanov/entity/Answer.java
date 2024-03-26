@@ -6,6 +6,6 @@ import lombok.Data;
 public class Answer implements Identifiable {
     private Long id;
     private String text;
-    private Long idNextQuestion;
+    private Long nextQuestionId;
     private boolean isDeadEnd;
 }

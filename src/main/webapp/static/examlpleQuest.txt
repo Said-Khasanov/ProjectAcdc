@@ -1,0 +1,12 @@
+t: quest title
+
+q1: question 1 text
+a>q2: answer text (The next question is q2)
+a>e1: answer text (The answer will lead to the e1)
+e1: end 1 text
+
+q2: question 2 text
+a>e2: answer text
+a>e3: answer text
+e2: end 2 text
+e3: end 3 text

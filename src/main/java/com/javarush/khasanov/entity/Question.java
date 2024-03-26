@@ -6,4 +6,5 @@ import lombok.Data;
 public class Question implements Identifiable {
     private Long id;
     private String text;
+    private boolean isEnding;
 }

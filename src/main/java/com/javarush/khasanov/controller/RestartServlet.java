@@ -12,8 +12,11 @@ import java.io.IOException;
 public class RestartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        HttpSession session = req.getSession();
+        HttpSession session = req.getSession(false);
+        Long questId = (Long) session.getAttribute("questId");
         session.invalidate();
+        session = req.getSession();
+        session.setAttribute("questId", questId);
         resp.sendRedirect("/quest");
     }
 }

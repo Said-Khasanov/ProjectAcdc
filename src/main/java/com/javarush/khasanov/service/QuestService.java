@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class QuestService {
     private static final Pattern titlePattern = Pattern.compile("^[Tt]: *\t*");
@@ -43,12 +44,21 @@ public class QuestService {
         this.questRepository = questRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
-        loadQuest();
+        loadQuests();
     }
 
-    public void loadQuest() {
-        Path defaultQuest = WEB_INF.resolve("../static/defaultQuest.txt");
-        try (BufferedReader bufferedReader = Files.newBufferedReader(defaultQuest)) {
+    private void loadQuests() {
+        Path pathQuests = WEB_INF.resolve("../static/quests");
+        try (Stream<Path> list = Files.list(pathQuests)) {
+            list.forEach(this::loadQuest);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadQuest(Path path) {
+        System.out.println(path);
+        try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
             Quest quest = parseQuest(bufferedReader);
             questRepository.create(quest);
         } catch (IOException e) {

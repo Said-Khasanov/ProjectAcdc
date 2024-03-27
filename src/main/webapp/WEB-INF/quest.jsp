@@ -27,8 +27,8 @@
     <script>
         function sendAnswer(id) {
             $.ajax({
+                method: 'POST',
                 url: '/quest',
-                method: 'post',
                 dataType: 'html',
                 headers: {'answerId': id},
                 async: false,

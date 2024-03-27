@@ -29,14 +29,19 @@ public class GameService {
         this.answerRepository = answerRepository;
     }
 
-    public Game getGame(Long id) {
-        Optional<Game> optionalGame = gameRepository.get(id);
-        return optionalGame.orElseGet(this::createGame);
+    public Game getGame(Long id, Long questId) {
+        Game game = gameRepository.get(id).orElseThrow();
+        Quest quest = questRepository.get(questId).orElseThrow();
+        if (game.getQuest().equals(quest)) {
+            return game;
+        } else {
+            return createGame(questId);
+        }
     }
 
-    public Game createGame() {
+    public Game createGame(Long questId) {
         Game game = new Game();
-        Quest quest = questRepository.get(1L).orElseThrow();
+        Quest quest = questRepository.get(questId).orElseThrow();
         game.setQuest(quest);
         game.setCurrentQuestion(quest.getFirstQuestion());
         gameRepository.create(game);

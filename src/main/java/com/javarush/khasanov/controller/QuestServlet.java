@@ -1,12 +1,9 @@
 package com.javarush.khasanov.controller;
 
+import com.javarush.khasanov.config.Components;
 import com.javarush.khasanov.entity.Answer;
 import com.javarush.khasanov.entity.Game;
 import com.javarush.khasanov.entity.Question;
-import com.javarush.khasanov.repository.AnswerRepository;
-import com.javarush.khasanov.repository.GameRepository;
-import com.javarush.khasanov.repository.QuestRepository;
-import com.javarush.khasanov.repository.QuestionRepository;
 import com.javarush.khasanov.service.GameService;
 import com.javarush.khasanov.service.QuestService;
 import jakarta.servlet.RequestDispatcher;
@@ -21,24 +18,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-@WebServlet("/quest")
+import static com.javarush.khasanov.config.Constants.QUEST_PAGE;
+import static com.javarush.khasanov.config.Constants.QUEST_RESOURCE;
+
+@WebServlet(QUEST_RESOURCE)
 public class QuestServlet extends HttpServlet {
-    public static final String QUEST_PAGE = "/WEB-INF/quest.jsp";
-    private final GameRepository gameRepository = new GameRepository();
-    private final QuestRepository questRepository = new QuestRepository();
-    private final QuestionRepository questionRepository = new QuestionRepository();
-    private final AnswerRepository answerRepository = new AnswerRepository();
-    private final GameService gameService = new GameService(
-            gameRepository,
-            questRepository,
-            questionRepository,
-            answerRepository
-    );
-    private final QuestService questService = new QuestService(
-            questRepository,
-            questionRepository,
-            answerRepository
-    );
+    private final GameService gameService = Components.get(GameService.class);
+    private final QuestService questService = Components.get(QuestService.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -58,11 +44,11 @@ public class QuestServlet extends HttpServlet {
     }
 
     private static Long getQuestId(HttpServletRequest req) {
-        String stringId = req.getParameter("id");
+        String stringQuestId = req.getParameter("id");
         HttpSession session = req.getSession();
-        return Objects.isNull(stringId)
+        return Objects.isNull(stringQuestId)
                 ? (Long) session.getAttribute("questId")
-                : Long.parseLong(stringId);
+                : Long.parseLong(stringQuestId);
     }
 
     @Override
@@ -86,10 +72,7 @@ public class QuestServlet extends HttpServlet {
 
     private Game getSessionGame(HttpSession session, Long questId) {
         Long gameId = (Long) session.getAttribute("gameId");
-        Game game = Objects.isNull(gameId)
-                ? gameService.createGame(questId)
-                : gameService.getGame(gameId, questId);
-
+        Game game = gameService.getSessionGame(gameId, questId);
         session.setAttribute("gameId", game.getId());
         session.setAttribute("questId", questId);
         return game;

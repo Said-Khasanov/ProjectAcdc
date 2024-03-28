@@ -6,49 +6,43 @@ import com.javarush.khasanov.entity.Question;
 import com.javarush.khasanov.repository.AnswerRepository;
 import com.javarush.khasanov.repository.QuestRepository;
 import com.javarush.khasanov.repository.QuestionRepository;
+import com.javarush.khasanov.repository.UserRepository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class QuestService {
-    private static final Pattern titlePattern = Pattern.compile("^[Tt]: *\t*");
-    private static final Pattern questionPattern = Pattern.compile("^[QqEe][0-9]+: *\t*");
-    public static final String NEXT_QUESTION_SIGN = ">";
-    private static final Pattern answerPattern = Pattern.compile(
-            "^[Aa]" + NEXT_QUESTION_SIGN + "[QqEe][0-9]+: *\t*"
-    );
-    private static final Path WEB_INF = Paths.get(
-            URI.create(
-                    Objects.requireNonNull(Quest.class.getResource("/")).toString()
-            )
-    ).getParent();
+import static com.javarush.khasanov.config.Constants.*;
 
+public class QuestService {
     private final QuestRepository questRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final UserRepository userRepository;
 
     public QuestService(
             QuestRepository questRepository,
             QuestionRepository questionRepository,
-            AnswerRepository answerRepository
+            AnswerRepository answerRepository,
+            UserRepository userRepository
     ) {
         this.questRepository = questRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
-        loadQuests();
+        this.userRepository = userRepository;
+        loadQuestsFromDirectory();
     }
 
-    private void loadQuests() {
-        Path pathQuests = WEB_INF.resolve("../static/quests");
+    private void loadQuestsFromDirectory() {
+        Path pathQuests = WEB_INF.resolve(PATH_TO_QUESTS);
         try (Stream<Path> list = Files.list(pathQuests)) {
             list.forEach(this::loadQuest);
         } catch (IOException e) {
@@ -57,12 +51,14 @@ public class QuestService {
     }
 
     public void loadQuest(Path path) {
-        System.out.println(path);
-        try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
-            Quest quest = parseQuest(bufferedReader);
-            questRepository.create(quest);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (path.toFile().isFile()) {
+            try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
+                Quest quest = parseQuest(bufferedReader);
+                quest.setAuthor(userRepository.getAdmin());
+                questRepository.create(quest);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

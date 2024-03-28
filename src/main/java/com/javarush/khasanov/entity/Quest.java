@@ -12,4 +12,5 @@ public class Quest implements Identifiable {
     private String title;
     private final Map<Question, List<Answer>> questions = new HashMap<>();
     private Question firstQuestion;
+    private User author;
 }

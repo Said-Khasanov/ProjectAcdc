@@ -1,11 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html>
-<head>
-    <title>Quest</title>
-</head>
-<body>
-    <div class="game">
+<%@include file="header.jsp" %>
+<main role="main">
+    <div class="container">
         <p><c:out value="${sessionScope.question.getText()}"/></p>
         <ul>
             <c:forEach items="${sessionScope.answers}" var="i">
@@ -23,20 +20,5 @@
             </c:if>
         </div>
     </div>
-    <script src="static/jquery-3.6.0.min.js"></script>
-    <script>
-        function sendAnswer(id) {
-            $.ajax({
-                method: 'POST',
-                url: '/quest',
-                dataType: 'html',
-                headers: {'answerId': id},
-                async: false,
-                success: function () {
-                    location.reload();
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+</main>
+<%@include file="footer.jsp" %>

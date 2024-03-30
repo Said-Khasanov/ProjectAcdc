@@ -3,20 +3,35 @@
 <%@include file="header.jsp" %>
 <main role="main">
     <div class="container">
-        <p><c:out value="${sessionScope.question.getText()}"/></p>
-        <ul>
+        <div class="row justify-content-md-center m-5">
+            <div class="col-md-auto">
+                <img src="" alt="question image"/>
+            </div>
+        </div>
+        <div class="row justify-content-md-center m-5">
+            <div class="col-md-auto">
+                <h2><c:out value="${sessionScope.question.getText()}"/></h2>
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center m-5">
             <c:forEach items="${sessionScope.answers}" var="i">
-                <li>
-                    <button onclick="sendAnswer(${i.getId()})">
+                <div class="col-md-auto">
+                    <button type="button" class="btn btn-light" onclick="sendAnswer(${i.getId()})">
                         <c:out value="${i.getText()}"/>
                     </button>
-                </li>
-                <br/>
+                </div>
             </c:forEach>
-        </ul>
-        <div>
+        </div>
+
+        <div class="row justify-content-md-center m-5">
             <c:if test="${sessionScope.answers.isEmpty()}">
-                <button class="restart" onclick="document.location='/restart'">Начать заново</button>
+                <div class="col-md-auto">
+                    <button type="button" class="btn btn-primary" onclick="document.location='/restart'">Начать заново</button>
+                </div>
+                <div class="col-md-auto">
+                    <button type="button" class="btn btn-primary" onclick="document.location='/restart'">Квесты</button>
+                </div>
             </c:if>
         </div>
     </div>

@@ -34,11 +34,19 @@
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li><a href="/" class="nav-link px-2 link-secondary">Главная</a></li>
         <li><a href="/quests-list" class="nav-link px-2">Квесты</a></li>
-        <li><a href="#" class="nav-link px-2">Статистика</a></li>
+        <li><a href="/statistics" class="nav-link px-2">Статистика</a></li>
     </ul>
 
     <div class="col-md-3 text-end">
-        <button onclick="document.location='/login'" type="button" class="btn btn-outline-primary me-2">Войти</button>
-        <button onclick="document.location='/signup'" type="button" class="btn btn-primary">Зарегистрироваться</button>
+        <c:choose>
+            <c:when test="${sessionScope.userId > 0}">
+                <div class="btn"><b>${sessionScope.username}</b></div>
+                <button onclick="document.location='/logout'" type="button" class="btn btn-outline-primary me-2">Выйти</button>
+            </c:when>
+            <c:otherwise>
+                <button onclick="document.location='/login'" type="button" class="btn btn-outline-primary me-2">Войти</button>
+                <button onclick="document.location='/signup'" type="button" class="btn btn-primary">Зарегистрироваться</button>
+            </c:otherwise>
+        </c:choose>
     </div>
 </header>

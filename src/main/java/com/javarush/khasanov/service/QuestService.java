@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
-import static com.javarush.khasanov.config.Constants.*;
+import static com.javarush.khasanov.configuration.Configuration.*;
 
 public class QuestService {
     private final QuestRepository questRepository;
@@ -116,8 +116,9 @@ public class QuestService {
         String tag = answerMatcher.group().toLowerCase().trim();
         String titleText = line.substring(startIndex);
 
-        Answer answer = new Answer();
-        answer.setText(titleText);
+        Answer answer = Answer.builder()
+                .text(titleText)
+                .build();
 
         String nextQuestionTag = tag.split(NEXT_QUESTION_SIGN)[1];
         answers.put(nextQuestionTag, answer);
@@ -145,4 +146,9 @@ public class QuestService {
         String titleText = line.substring(startIndex);
         quest.setTitle(titleText);
     }
+
+    public List<Quest> getAllQuests() {
+        return new ArrayList<>(questRepository.getAll());
+    }
+
 }

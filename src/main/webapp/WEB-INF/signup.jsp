@@ -2,7 +2,7 @@
 <%@include file="header.jsp" %><html>
 <main role="main">
     <div class="container">
-        <div class="row justify-content-md-center">
+        <div class="row justify-content-md-center m-5">
             <div class="col-md-auto">
                 <form method="post" action="signup">
                     <div class="mb-3">

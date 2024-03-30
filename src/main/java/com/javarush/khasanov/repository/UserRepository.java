@@ -8,9 +8,10 @@ public class UserRepository extends AbstractRepository<User> {
     public User getAdmin() {
         Optional<User> optionalUser = get(1L);
         if (optionalUser.isEmpty()) {
-            User admin = new User();
-            admin.setName("admin");
-            admin.setPassword("admin");
+            User admin = User.builder()
+                    .name("admin")
+                    .password("admin")
+                    .build();
             create(admin);
             return admin;
         }

@@ -1,8 +1,7 @@
 package com.javarush.khasanov.controller;
 
-import com.javarush.khasanov.config.Components;
+import com.javarush.khasanov.configuration.Components;
 import com.javarush.khasanov.entity.Quest;
-import com.javarush.khasanov.repository.QuestRepository;
 import com.javarush.khasanov.service.QuestService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -13,22 +12,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.javarush.khasanov.config.Constants.QUESTS_LIST_PAGE;
-import static com.javarush.khasanov.config.Constants.QUESTS_LIST_RESOURCE;
+import static com.javarush.khasanov.configuration.Configuration.QUESTS_LIST_PAGE;
+import static com.javarush.khasanov.configuration.Configuration.QUESTS_LIST_RESOURCE;
 
 @WebServlet(QUESTS_LIST_RESOURCE)
 public class QuestsListServlet extends HttpServlet {
-
-    private final QuestRepository questRepository = Components.get(QuestRepository.class);
     private final QuestService questService = Components.get(QuestService.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        List<Quest> questsList = new ArrayList<>(questRepository.getAll());
+
+        List<Quest> questsList = questService.getAllQuests();
         session.setAttribute("questsList", questsList);
 
         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(QUESTS_LIST_PAGE);

@@ -4,7 +4,7 @@
 <main role="main">
     <div class="album py-5 bg-light">
         <div class="container">
-            <div class="row">
+            <div class="row m-5">
                 <c:forEach var="quest" items="${sessionScope.questsList}">
                     <div class="col-md-4">
                         <div class="card mb-4 box-shadow">
@@ -16,13 +16,14 @@
                                      data-holder-rendered="true">
                             </a>
                             <div class="card-body">
-                                <p class="card-text">${quest.getTitle()}</p>
+                                <p class="card-text"><b>${quest.getTitle()}</b></p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                        <button onclick="document.location='/quest?id=${quest.getId()}'"
+                                                type="button"
+                                                class="btn btn-sm btn-outline-secondary">Играть</button>
                                     </div>
-                                    <small class="text-muted">9 mins</small>
+                                    <small class="text-muted">${quest.getAuthor().getName()}</small>
                                 </div>
                             </div>
                         </div>

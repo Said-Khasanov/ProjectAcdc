@@ -1,6 +1,6 @@
 package com.javarush.khasanov.controller;
 
-import com.javarush.khasanov.config.Components;
+import com.javarush.khasanov.configuration.Components;
 import com.javarush.khasanov.service.UserService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static com.javarush.khasanov.config.Constants.*;
+import static com.javarush.khasanov.configuration.Configuration.*;
 
 @WebServlet(LOGIN_RESOURCE)
 public class LoginServlet extends HttpServlet {
@@ -34,6 +34,7 @@ public class LoginServlet extends HttpServlet {
         } else {
             HttpSession session = req.getSession();
             session.setAttribute("userId", userId);
+            session.setAttribute("username", username);
             resp.sendRedirect(HOME_RESOURCE);
         }
     }

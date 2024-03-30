@@ -1,8 +1,9 @@
-package com.javarush.khasanov.config;
+package com.javarush.khasanov.configuration;
 
-import lombok.SneakyThrows;
+import com.javarush.khasanov.exception.ProjectException;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +16,7 @@ public final class Components {
 
     private static final Map<Class<?>, Object> instantMap = new ConcurrentHashMap<>();
 
-    @SneakyThrows
+    @SuppressWarnings("unchecked")
     public static <T> T get(Class<?> componentClass) {
         Object o = instantMap.get(componentClass);
         if (isNull(o)) {
@@ -25,8 +26,12 @@ public final class Components {
             for (int i = 0; i < parameterTypes.length; i++) {
                 parameters[i] = get(parameterTypes[i]);
             }
-            Object component = constructor.newInstance(parameters);
-            instantMap.put(componentClass, component);
+            try {
+                Object component = constructor.newInstance(parameters);
+                instantMap.put(componentClass, component);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                throw new ProjectException("Не удалось создать компонент");
+            }
         }
         return (T) requireNonNullElse(o, instantMap.get(componentClass));
     }

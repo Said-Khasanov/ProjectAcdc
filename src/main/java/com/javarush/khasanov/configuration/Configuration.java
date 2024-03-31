@@ -22,6 +22,7 @@ public final class Configuration {
     public static final String RESTART_RESOURCE = "/restart";
     public static final String STATISTICS_RESOURCE = "/statistics";
     public static final String CREATE_QUEST_RESOURCE = "/create-quest";
+    public static final String DELETE_QUEST_RESOURCE = "/delete";
     public static final String HOME_PAGE = PAGE_PREFIX + HOME_RESOURCE + PAGE_POSTFIX;
     public static final String QUEST_PAGE = PAGE_PREFIX + QUEST_RESOURCE + PAGE_POSTFIX;
     public static final String QUESTS_LIST_PAGE = PAGE_PREFIX + QUESTS_LIST_RESOURCE + PAGE_POSTFIX;

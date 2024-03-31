@@ -4,6 +4,7 @@ import com.javarush.khasanov.entity.Answer;
 import com.javarush.khasanov.entity.Quest;
 import com.javarush.khasanov.entity.Question;
 import com.javarush.khasanov.entity.User;
+import com.javarush.khasanov.exception.ProjectException;
 import com.javarush.khasanov.repository.AnswerRepository;
 import com.javarush.khasanov.repository.QuestRepository;
 import com.javarush.khasanov.repository.QuestionRepository;
@@ -168,5 +169,15 @@ public class QuestService {
     public List<Quest> getAllQuests() {
         return new ArrayList<>(questRepository.getAll());
     }
+
+    public void deleteQuest(Long questId, Long userId) {
+        User user = userRepository.get(userId).orElseThrow();
+        Quest quest = questRepository.get(questId).orElseThrow();
+        if (!quest.getAuthor().equals(user)) {
+            throw new ProjectException("Нельзя удалить чужой квест");
+        }
+        questRepository.delete(quest);
+    }
+
 
 }

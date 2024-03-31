@@ -12,9 +12,10 @@
             </div>
             <div class="row m-5">
                 <c:forEach var="quest" items="${sessionScope.questsList}">
+                    <c:set var="questId" value="${quest.getId()}" scope="session"/>
                     <div class="col-md-4">
                         <div class="card mb-4 box-shadow">
-                            <a href="quest?id=${quest.getId()}">
+                            <a href="quest?id=${questId}">
                                 <img class="card-img-top"
                                      data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail"
                                      alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;"
@@ -25,9 +26,13 @@
                                 <p class="card-text"><b>${quest.getTitle()}</b></p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <button onclick="document.location='/quest?id=${quest.getId()}'"
+                                        <button onclick="document.location='/quest?id=${questId}'"
                                                 type="button"
                                                 class="btn btn-sm btn-outline-secondary">Играть</button>
+                                        <c:if test="${quest.getAuthor().getId().equals(sessionScope.userId)}">
+                                            <button type="submit" form="deleteForm${questId}" class="btn btn-sm btn-outline-secondary">Удалить</button>
+                                            <form id="deleteForm${questId}" action="delete?id=${questId}" method="POST"></form>
+                                        </c:if>
                                     </div>
                                     <small class="text-muted">${quest.getAuthor().getName()}</small>
                                 </div>

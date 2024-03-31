@@ -44,7 +44,7 @@ public class StatisticsService {
             }
             statsMap.put(user.getName(), countMap);
         }
-        return  statsMap;
+        return statsMap;
     }
 
 

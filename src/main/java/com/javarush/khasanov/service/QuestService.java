@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -45,12 +46,13 @@ public class QuestService {
         Path pathQuests = WEB_INF.resolve(PATH_TO_QUESTS);
         try (Stream<Path> list = Files.list(pathQuests)) {
             list.forEach(this::createQuestFromFile);
+        } catch (NoSuchFileException ignored) {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void createQuestFromFile(Path path) {
+    private void createQuestFromFile(Path path) {
         if (path.toFile().isFile()) {
             try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
                 Quest quest = parseQuest(bufferedReader);

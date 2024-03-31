@@ -16,7 +16,7 @@
 
         <div class="row justify-content-md-center m-5">
             <c:forEach items="${sessionScope.answers}" var="i">
-                <div class="col-md-auto">
+                <div class="col-md-2">
                     <button type="button" class="btn btn-light" onclick="sendAnswer(${i.getId()})">
                         <c:out value="${i.getText()}"/>
                     </button>
@@ -30,7 +30,7 @@
                     <button type="button" class="btn btn-primary" onclick="document.location='/restart'">Начать заново</button>
                 </div>
                 <div class="col-md-auto">
-                    <button type="button" class="btn btn-primary" onclick="document.location='/restart'">Квесты</button>
+                    <button type="button" class="btn btn-primary" onclick="document.location='/quests-list'">Квесты</button>
                 </div>
             </c:if>
         </div>

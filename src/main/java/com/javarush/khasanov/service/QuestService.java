@@ -77,7 +77,7 @@ public class QuestService {
     private Quest parseQuest(Reader in) {
         Quest quest = new Quest();
         Map<String, Question> tagQuestionMap = new HashMap<>();
-        Map<String, Answer> tagAnswerMap = new HashMap<>();
+        Map<String, List<Answer>> tagAnswerMap = new HashMap<>();
         Question currentQuestion = new Question();
         List<Answer> answerList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(in)) {
@@ -100,6 +100,7 @@ public class QuestService {
                     }
                 } else if (answerMatcher.find()) {
                     Answer answer = parseAnswer(answerMatcher, line, tagAnswerMap);
+                    answerRepository.create(answer);
                     answerList.add(answer);
                 }
             }
@@ -110,20 +111,21 @@ public class QuestService {
         return quest;
     }
 
-    private void configureAnswers(Map<String, Answer> tagAnswerMap, Map<String, Question> tagQuestionMap) {
+    private void configureAnswers(Map<String, List<Answer>> tagAnswerMap, Map<String, Question> tagQuestionMap) {
         for (var entry : tagAnswerMap.entrySet()) {
             String tag = entry.getKey();
-            Answer answer = entry.getValue();
-            Question nextQuestion = tagQuestionMap.get(tag);
-            if (nextQuestion.isEnding()) {
-                answer.setDeadEnd(true);
+            for (Answer answer : entry.getValue()) {
+                Question nextQuestion = tagQuestionMap.get(tag);
+                if (nextQuestion.isEnding()) {
+                    answer.setDeadEnd(true);
+                }
+                answer.setNextQuestionId(nextQuestion.getId());
+                answerRepository.update(answer);
             }
-            answer.setNextQuestionId(nextQuestion.getId());
-            answerRepository.create(answer);
         }
     }
 
-    private Answer parseAnswer(Matcher answerMatcher, String line, Map<String, Answer> answers) {
+    private Answer parseAnswer(Matcher answerMatcher, String line, Map<String, List<Answer>> answers) {
         int startIndex = answerMatcher.end();
         String tag = answerMatcher.group().toLowerCase().trim();
         String titleText = line.substring(startIndex);
@@ -133,7 +135,9 @@ public class QuestService {
                 .build();
 
         String nextQuestionTag = tag.split(NEXT_QUESTION_SIGN)[1];
-        answers.put(nextQuestionTag, answer);
+        List<Answer> answerList = requireNonNullElse(answers.get(nextQuestionTag), new ArrayList<>());
+        answerList.add(answer);
+        answers.put(nextQuestionTag, answerList);
         return answer;
     }
 

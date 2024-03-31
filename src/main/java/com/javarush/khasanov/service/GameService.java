@@ -10,6 +10,7 @@ import com.javarush.khasanov.repository.QuestionRepository;
 import java.util.*;
 
 import static com.javarush.khasanov.configuration.Configuration.QUEST_NOT_EXISTS;
+import static java.util.Objects.isNull;
 
 public class GameService {
     private final GameRepository gameRepository;
@@ -67,6 +68,9 @@ public class GameService {
     }
 
     public List<Answer> getAnswers(Game game, Question question) {
+        if (isNull(game) || isNull(question)) {
+            return Collections.emptyList();
+        }
         Quest quest = game.getQuest();
         Map<Question, List<Answer>> questions = quest.getQuestions();
         List<Answer> answers = questions.get(question);

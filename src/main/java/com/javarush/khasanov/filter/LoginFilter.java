@@ -15,11 +15,15 @@ import static java.util.Objects.isNull;
 
 
 @WebFilter(urlPatterns = {
-        QUESTS_LIST_RESOURCE, LOGOUT_RESOURCE, QUEST_RESOURCE, RESTART_RESOURCE,
+        QUESTS_LIST_RESOURCE, LOGOUT_RESOURCE,
+        QUEST_RESOURCE, RESTART_RESOURCE,
+        CREATE_QUEST_RESOURCE
 })
 public class LoginFilter extends HttpFilter {
     @Override
-    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
+    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+            throws IOException, ServletException
+    {
         HttpSession session = req.getSession();
         Long userId = (Long) session.getAttribute("userId");
         if (isNull(userId)) {

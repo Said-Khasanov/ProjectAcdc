@@ -4,13 +4,17 @@ import com.javarush.khasanov.entity.User;
 
 import java.util.Optional;
 
+import static com.javarush.khasanov.configuration.Configuration.ADMIN_ID;
+import static com.javarush.khasanov.configuration.Configuration.ADMIN_USERNAME;
+
 public class UserRepository extends AbstractRepository<User> {
+
     public User getAdmin() {
-        Optional<User> optionalUser = get(1L);
+        Optional<User> optionalUser = get(ADMIN_ID);
         if (optionalUser.isEmpty()) {
             User admin = User.builder()
-                    .name("admin")
-                    .password("admin")
+                    .name(ADMIN_USERNAME)
+                    .password(ADMIN_USERNAME)
                     .build();
             create(admin);
             return admin;

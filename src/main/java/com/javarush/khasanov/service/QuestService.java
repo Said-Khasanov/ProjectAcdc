@@ -3,6 +3,7 @@ package com.javarush.khasanov.service;
 import com.javarush.khasanov.entity.Answer;
 import com.javarush.khasanov.entity.Quest;
 import com.javarush.khasanov.entity.Question;
+import com.javarush.khasanov.entity.User;
 import com.javarush.khasanov.repository.AnswerRepository;
 import com.javarush.khasanov.repository.QuestRepository;
 import com.javarush.khasanov.repository.QuestionRepository;
@@ -11,16 +12,15 @@ import com.javarush.khasanov.repository.UserRepository;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 import static com.javarush.khasanov.configuration.Configuration.*;
+import static java.util.Objects.*;
 
 public class QuestService {
     private final QuestRepository questRepository;
@@ -44,13 +44,13 @@ public class QuestService {
     private void loadQuestsFromDirectory() {
         Path pathQuests = WEB_INF.resolve(PATH_TO_QUESTS);
         try (Stream<Path> list = Files.list(pathQuests)) {
-            list.forEach(this::loadQuest);
+            list.forEach(this::createQuestFromFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void loadQuest(Path path) {
+    public void createQuestFromFile(Path path) {
         if (path.toFile().isFile()) {
             try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
                 Quest quest = parseQuest(bufferedReader);
@@ -62,15 +62,27 @@ public class QuestService {
         }
     }
 
-    public Quest parseQuest(Reader in) {
+    public boolean createQuestFromText(String text, User author) {
+        if (isNull(text) || isNull(author) || text.isBlank()){
+            return false;
+        }
+        try (StringReader stringReader = new StringReader(text)) {
+            Quest quest = parseQuest(stringReader);
+            quest.setAuthor(author);
+            questRepository.create(quest);
+        }
+        return true;
+    }
+
+    private Quest parseQuest(Reader in) {
         Quest quest = new Quest();
         Map<String, Question> tagQuestionMap = new HashMap<>();
         Map<String, Answer> tagAnswerMap = new HashMap<>();
         Question currentQuestion = new Question();
         List<Answer> answerList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(in)) {
-            while (reader.ready()) {
-                String line = reader.readLine();
+            String line;
+            while (nonNull(line = reader.readLine())) {
                 Matcher titleMatcher = titlePattern.matcher(line);
                 Matcher questionMatcher = questionPattern.matcher(line);
                 Matcher answerMatcher = answerPattern.matcher(line);
@@ -83,7 +95,7 @@ public class QuestService {
                         answerList.clear();
                     }
                     currentQuestion = parseQuestion(questionMatcher, line, tagQuestionMap);
-                    if (quest.getFirstQuestion() == null) {
+                    if (isNull(quest.getFirstQuestion())) {
                         quest.setFirstQuestion(currentQuestion);
                     }
                 } else if (answerMatcher.find()) {

@@ -49,4 +49,8 @@ public class UserService {
         return optionalUser.get();
     }
 
+    public void registerAdmin() {
+        userRepository.getAdmin();
+    }
+
 }

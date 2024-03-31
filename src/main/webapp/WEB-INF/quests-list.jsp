@@ -4,6 +4,12 @@
 <main role="main">
     <div class="album py-5 bg-light">
         <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <button onclick="document.location='/create-quest'"
+                            type="button" class="btn btn-xl btn-outline-primary">Создать квест</button>
+                </div>
+            </div>
             <div class="row m-5">
                 <c:forEach var="quest" items="${sessionScope.questsList}">
                     <div class="col-md-4">
@@ -34,5 +40,3 @@
     </div>
 </main>
 <%@include file="footer.jsp" %>
-</body>
-</html>

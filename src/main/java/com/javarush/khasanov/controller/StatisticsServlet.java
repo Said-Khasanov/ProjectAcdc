@@ -14,17 +14,17 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
-import static com.javarush.khasanov.configuration.Configuration.STATISTICS_PAGE;
-import static com.javarush.khasanov.configuration.Configuration.STATISTICS_RESOURCE;
+import static com.javarush.khasanov.configuration.Configuration.*;
 
 @WebServlet(STATISTICS_RESOURCE)
 public class StatisticsServlet extends HttpServlet {
+
     private final StatisticsService statisticsService = Components.get(StatisticsService.class);
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Map<String, Map<GameState, Long>> statsMap = statisticsService.calculate();
-        session.setAttribute("statsMap", statsMap);
+        session.setAttribute(ATTRIBUTE_STATISTICS_MAP, statsMap);
         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(STATISTICS_PAGE);
         requestDispatcher.forward(req, resp);
     }

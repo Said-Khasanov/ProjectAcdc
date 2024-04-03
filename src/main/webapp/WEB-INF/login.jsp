@@ -7,11 +7,11 @@
                 <form method="post" action="login">
                     <div class="mb-3">
                         <label for="username" class="form-label">Имя</label>
-                        <input type="text" class="form-control" id="username" name="username">
+                        <input type="text" class="form-control" id="username" name="username" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" id="password" name="password">
+                        <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <input type="submit" class="btn btn-primary" value="Войти"/>
                 </form>

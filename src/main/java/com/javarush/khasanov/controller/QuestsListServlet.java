@@ -14,11 +14,11 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-import static com.javarush.khasanov.configuration.Configuration.QUESTS_LIST_PAGE;
-import static com.javarush.khasanov.configuration.Configuration.QUESTS_LIST_RESOURCE;
+import static com.javarush.khasanov.configuration.Configuration.*;
 
 @WebServlet(QUESTS_LIST_RESOURCE)
 public class QuestsListServlet extends HttpServlet {
+
     private final QuestService questService = Components.get(QuestService.class);
 
     @Override
@@ -26,7 +26,7 @@ public class QuestsListServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         List<Quest> questsList = questService.getAllQuests();
-        session.setAttribute("questsList", questsList);
+        session.setAttribute(ATTRIBUTE_QUESTS_LIST, questsList);
 
         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(QUESTS_LIST_PAGE);
         requestDispatcher.forward(req, resp);

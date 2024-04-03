@@ -16,6 +16,7 @@ import static com.javarush.khasanov.configuration.Configuration.*;
 
 @WebServlet(LOGIN_RESOURCE)
 public class LoginServlet extends HttpServlet {
+
     private final UserService userService = Components.get(UserService.class);
 
     @Override
@@ -26,15 +27,15 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
+        String username = req.getParameter(PARAMETER_USERNAME);
+        String password = req.getParameter(PARAMETER_PASSWORD);
         Long userId = userService.loginUser(username, password);
         if (NON_EXISTENT_ID.equals(userId)) {
             doGet(req, resp);
         } else {
             HttpSession session = req.getSession();
-            session.setAttribute("userId", userId);
-            session.setAttribute("username", username);
+            session.setAttribute(ATTRIBUTE_USER_ID, userId);
+            session.setAttribute(PARAMETER_USERNAME, username);
             resp.sendRedirect(HOME_RESOURCE);
         }
     }

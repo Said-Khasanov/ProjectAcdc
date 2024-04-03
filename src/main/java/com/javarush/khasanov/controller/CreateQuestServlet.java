@@ -30,9 +30,9 @@ public class CreateQuestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute(ATTRIBUTE_USER_ID);
         User author = userService.getUser(userId);
-        String questText = req.getParameter("questText");
+        String questText = req.getParameter(PARAMETER_QUEST_TEXT);
         if (questService.createQuestFromText(questText, author)) {
             resp.sendRedirect(QUESTS_LIST_RESOURCE);
         } else {

@@ -26,13 +26,13 @@ public class SignupServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
+        String username = req.getParameter(PARAMETER_USERNAME);
+        String password = req.getParameter(PARAMETER_PASSWORD);
         Long userId = userService.registerUser(username, password);
         if (!NON_EXISTENT_ID.equals(userId)) {
             HttpSession session = req.getSession();
-            session.setAttribute("userId", userId);
-            session.setAttribute("username", username);
+            session.setAttribute(ATTRIBUTE_USER_ID, userId);
+            session.setAttribute(ATTRIBUTE_USERNAME, username);
             RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(HOME_PAGE);
             requestDispatcher.forward(req, resp);
         }

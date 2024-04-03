@@ -25,6 +25,7 @@ import static com.javarush.khasanov.configuration.Configuration.*;
 import static java.util.Objects.*;
 
 public class QuestService {
+
     private final QuestRepository questRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
@@ -49,7 +50,7 @@ public class QuestService {
             list.forEach(this::createQuestFromFile);
         } catch (NoSuchFileException ignored) {
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ProjectException(e);
         }
     }
 
@@ -60,7 +61,7 @@ public class QuestService {
                 quest.setAuthor(userRepository.getAdmin());
                 questRepository.create(quest);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ProjectException(e);
             }
         }
     }
@@ -174,7 +175,7 @@ public class QuestService {
         User user = userRepository.get(userId).orElseThrow();
         Quest quest = questRepository.get(questId).orElseThrow();
         if (!quest.getAuthor().equals(user)) {
-            throw new ProjectException("Нельзя удалить чужой квест");
+            throw new ProjectException(CANNOT_DELETE_NOT_YOUR_OWN_QUEST);
         }
         questRepository.delete(quest);
     }

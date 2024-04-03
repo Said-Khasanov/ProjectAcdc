@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 public final class Configuration {
     private Configuration(){}
-    public static final String QUEST_NOT_EXISTS = "Quest not exists";
     public static final String PAGE_PREFIX = "/WEB-INF";
     public static final String PAGE_POSTFIX = ".jsp";
     public static final String HOME_RESOURCE = "/home";
@@ -45,4 +44,18 @@ public final class Configuration {
                     Objects.requireNonNull(Quest.class.getResource("/")).toString()
             )
     ).getParent();
+    public static final String QUEST_NOT_EXISTS = "Quest not exists";
+    public static final String CANNOT_DELETE_NOT_YOUR_OWN_QUEST = "You can't delete a quest that is not your own";
+    public static final String PARAMETER_USERNAME = "username";
+    public static final String PARAMETER_PASSWORD = "password";
+    public static final String PARAMETER_QUEST_ID = "id";
+    public static final String PARAMETER_QUEST_TEXT = "questText";
+    public static final String ATTRIBUTE_USER_ID = "userId";
+    public static final String ATTRIBUTE_QUEST_ID = "questId";
+    public static final String ATTRIBUTE_QUESTION = "question";
+    public static final String ATTRIBUTE_ANSWERS = "answers";
+    public static final String ATTRIBUTE_QUESTS_LIST = "questsList";
+    public static final String ATTRIBUTE_USERNAME = "username";
+    public static final String ATTRIBUTE_STATISTICS_MAP = "statsMap";
+    public static final String REQUEST_HEADER_ANSWER_ID = "answerId";
 }

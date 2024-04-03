@@ -19,11 +19,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.javarush.khasanov.configuration.Configuration.QUEST_PAGE;
-import static com.javarush.khasanov.configuration.Configuration.QUEST_RESOURCE;
+import static com.javarush.khasanov.configuration.Configuration.*;
 
 @WebServlet(QUEST_RESOURCE)
 public class QuestServlet extends HttpServlet {
+
     private final GameService gameService = Components.get(GameService.class);
     private final UserService userService = Components.get(UserService.class);
 
@@ -37,8 +37,8 @@ public class QuestServlet extends HttpServlet {
         Question question = game.getCurrentQuestion();
         List<Answer> answers = gameService.getAnswers(game, question);
 
-        session.setAttribute("question", question);
-        session.setAttribute("answers", answers);
+        session.setAttribute(ATTRIBUTE_QUESTION, question);
+        session.setAttribute(ATTRIBUTE_ANSWERS, answers);
 
         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(QUEST_PAGE);
         requestDispatcher.forward(req, resp);
@@ -55,15 +55,15 @@ public class QuestServlet extends HttpServlet {
     }
 
     private static Long getQuestId(HttpServletRequest req) {
-        String stringQuestId = req.getParameter("id");
+        String stringQuestId = req.getParameter(PARAMETER_QUEST_ID);
         HttpSession session = req.getSession();
         return Objects.isNull(stringQuestId)
-                ? (Long) session.getAttribute("questId")
+                ? (Long) session.getAttribute(ATTRIBUTE_QUEST_ID)
                 : Long.parseLong(stringQuestId);
     }
 
     private void sendAnswer(HttpServletRequest req, Game game) {
-        String stringAnswerId = req.getHeader("answerId");
+        String stringAnswerId = req.getHeader(REQUEST_HEADER_ANSWER_ID);
 
         if (Objects.nonNull(stringAnswerId)) {
             Long answerId = Long.parseLong(stringAnswerId);
@@ -72,10 +72,10 @@ public class QuestServlet extends HttpServlet {
     }
 
     private Game getUserGame(HttpSession session, Long questId) {
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute(ATTRIBUTE_USER_ID);
         User user = userService.getUser(userId);
         Game game = gameService.getUserGame(user, questId);
-        session.setAttribute("questId", questId);
+        session.setAttribute(ATTRIBUTE_QUEST_ID, questId);
         return game;
     }
 }

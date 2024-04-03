@@ -17,7 +17,7 @@ import static java.util.Objects.isNull;
 @WebFilter(urlPatterns = {
         QUESTS_LIST_RESOURCE, LOGOUT_RESOURCE,
         QUEST_RESOURCE, RESTART_RESOURCE,
-        CREATE_QUEST_RESOURCE
+        CREATE_QUEST_RESOURCE, DELETE_QUEST_RESOURCE
 })
 public class LoginFilter extends HttpFilter {
     @Override
@@ -25,7 +25,7 @@ public class LoginFilter extends HttpFilter {
             throws IOException, ServletException
     {
         HttpSession session = req.getSession();
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute(ATTRIBUTE_USER_ID);
         if (isNull(userId)) {
             res.sendRedirect(LOGIN_RESOURCE);
         } else {

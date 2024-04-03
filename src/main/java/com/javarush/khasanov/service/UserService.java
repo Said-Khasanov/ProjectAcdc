@@ -7,6 +7,7 @@ import com.javarush.khasanov.repository.UserRepository;
 import java.util.Optional;
 
 import static com.javarush.khasanov.configuration.Configuration.NON_EXISTENT_ID;
+import static com.javarush.khasanov.configuration.Configuration.USER_NOT_FOUND;
 import static java.util.Objects.isNull;
 
 public class UserService {
@@ -44,7 +45,7 @@ public class UserService {
     public User getUser(Long id) {
         Optional<User> optionalUser = userRepository.get(id);
         if (optionalUser.isEmpty()) {
-            throw new ProjectException("Пользователь не найден");
+            throw new ProjectException(USER_NOT_FOUND);
         }
         return optionalUser.get();
     }

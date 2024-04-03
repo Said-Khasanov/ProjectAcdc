@@ -46,6 +46,7 @@ public final class Configuration {
     ).getParent();
     public static final String QUEST_NOT_EXISTS = "Quest not exists";
     public static final String CANNOT_DELETE_NOT_YOUR_OWN_QUEST = "You can't delete a quest that is not your own";
+    public static final String USER_NOT_FOUND = "Пользователь не найден";
     public static final String PARAMETER_USERNAME = "username";
     public static final String PARAMETER_PASSWORD = "password";
     public static final String PARAMETER_QUEST_ID = "id";

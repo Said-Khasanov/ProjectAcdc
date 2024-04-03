@@ -6,12 +6,14 @@ import com.javarush.khasanov.repository.AnswerRepository;
 import com.javarush.khasanov.repository.GameRepository;
 import com.javarush.khasanov.repository.QuestRepository;
 import com.javarush.khasanov.repository.QuestionRepository;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
-import static com.javarush.khasanov.configuration.Configuration.QUEST_NOT_EXISTS;
+import static com.javarush.khasanov.configuration.Configuration.QUEST_NOT_EXISTS_EXCEPTION;
 import static java.util.Objects.isNull;
 
+@Slf4j
 public class GameService {
     private final GameRepository gameRepository;
     private final QuestRepository questRepository;
@@ -51,7 +53,8 @@ public class GameService {
     private Quest getQuest(Long questId) {
         Optional<Quest> optionalQuest = questRepository.get(questId);
         if (optionalQuest.isEmpty()) {
-            throw new ProjectException(QUEST_NOT_EXISTS);
+            log.error("Не найден квест по id={}", questId);
+            throw new ProjectException(QUEST_NOT_EXISTS_EXCEPTION);
         }
         return optionalQuest.get();
     }

@@ -1,16 +1,20 @@
 package com.javarush.khasanov.configuration;
 
 import com.javarush.khasanov.exception.ProjectException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.javarush.khasanov.configuration.Configuration.COMPONENT_CREATION_EXCEPTION;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNullElse;
 
+@Slf4j
 public final class Components {
+
     private Components() {
     }
 
@@ -30,7 +34,8 @@ public final class Components {
                 Object component = constructor.newInstance(parameters);
                 instantMap.put(componentClass, component);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                throw new ProjectException("Не удалось создать компонент");
+                log.error("Ошибка при создании компонента {}", componentClass.getSimpleName());
+                throw new ProjectException(COMPONENT_CREATION_EXCEPTION);
             }
         }
         return (T) requireNonNullElse(o, instantMap.get(componentClass));

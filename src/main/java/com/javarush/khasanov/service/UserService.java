@@ -3,13 +3,15 @@ package com.javarush.khasanov.service;
 import com.javarush.khasanov.entity.User;
 import com.javarush.khasanov.exception.ProjectException;
 import com.javarush.khasanov.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
 import static com.javarush.khasanov.configuration.Configuration.NON_EXISTENT_ID;
-import static com.javarush.khasanov.configuration.Configuration.USER_NOT_FOUND;
+import static com.javarush.khasanov.configuration.Configuration.USER_NOT_FOUND_EXCEPTION;
 import static java.util.Objects.isNull;
 
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -27,6 +29,7 @@ public class UserService {
                 .password(password)
                 .build();
         userRepository.create(user);
+        log.info("Пользователь {} зарегистрирован", name);
         return user.getId();
     }
 
@@ -45,7 +48,8 @@ public class UserService {
     public User getUser(Long id) {
         Optional<User> optionalUser = userRepository.get(id);
         if (optionalUser.isEmpty()) {
-            throw new ProjectException(USER_NOT_FOUND);
+            log.error("Не найден пользователь по id={}", id);
+            throw new ProjectException(USER_NOT_FOUND_EXCEPTION);
         }
         return optionalUser.get();
     }

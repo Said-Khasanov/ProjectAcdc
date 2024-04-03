@@ -33,6 +33,7 @@ public final class Configuration {
     public static final Long NON_EXISTENT_ID = 0L;
     public static final Long ADMIN_ID = 1L;
     public static final String ADMIN_USERNAME = "admin";
+    public static final String ENDING_PREFIX = "e";
     public static final String NEXT_QUESTION_SIGN = ">";
     public static final Pattern titlePattern = Pattern.compile("^[Tt]: *\t*");
     public static final Pattern questionPattern = Pattern.compile("^[QqEe][0-9]+: *\t*");
@@ -44,9 +45,10 @@ public final class Configuration {
                     Objects.requireNonNull(Quest.class.getResource("/")).toString()
             )
     ).getParent();
-    public static final String QUEST_NOT_EXISTS = "Quest not exists";
-    public static final String CANNOT_DELETE_NOT_YOUR_OWN_QUEST = "You can't delete a quest that is not your own";
-    public static final String USER_NOT_FOUND = "Пользователь не найден";
+    public static final String QUEST_NOT_EXISTS_EXCEPTION = "Quest not exists";
+    public static final String COMPONENT_CREATION_EXCEPTION = "The component could not be created";
+    public static final String NOT_YOUR_OWN_QUEST_EXCEPTION = "You can't delete a quest that is not your own";
+    public static final String USER_NOT_FOUND_EXCEPTION = "Пользователь не найден";
     public static final String PARAMETER_USERNAME = "username";
     public static final String PARAMETER_PASSWORD = "password";
     public static final String PARAMETER_QUEST_ID = "id";

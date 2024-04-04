@@ -5,7 +5,9 @@
     <div class="container">
         <div class="row justify-content-md-center m-5">
             <div class="col-md-auto">
-                <img src="" alt="question image"/>
+                <c:if test="${!sessionScope.answers.isEmpty()}">
+                    <img src="static/quest_image.jpg" alt="question image" height="200px"/>
+                </c:if>
             </div>
         </div>
         <div class="row justify-content-md-center m-5">

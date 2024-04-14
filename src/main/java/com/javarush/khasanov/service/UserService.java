@@ -3,22 +3,20 @@ package com.javarush.khasanov.service;
 import com.javarush.khasanov.entity.User;
 import com.javarush.khasanov.exception.ProjectException;
 import com.javarush.khasanov.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
-import static com.javarush.khasanov.configuration.Configuration.NON_EXISTENT_ID;
-import static com.javarush.khasanov.configuration.Configuration.USER_NOT_FOUND_EXCEPTION;
+import static com.javarush.khasanov.config.Config.NON_EXISTENT_ID;
+import static com.javarush.khasanov.config.Config.USER_NOT_FOUND_EXCEPTION;
 import static java.util.Objects.isNull;
 
 @Slf4j
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public Long registerUser(String name, String password) {
         if (isNull(name) || name.isBlank() || isNull(password) || password.isBlank()) {
@@ -57,5 +55,4 @@ public class UserService {
     public void registerAdmin() {
         userRepository.getAdmin();
     }
-
 }

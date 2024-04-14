@@ -1,6 +1,6 @@
 package com.javarush.khasanov.controller;
 
-import com.javarush.khasanov.configuration.Components;
+import com.javarush.khasanov.config.Components;
 import com.javarush.khasanov.entity.User;
 import com.javarush.khasanov.service.GameService;
 import com.javarush.khasanov.service.UserService;
@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static com.javarush.khasanov.configuration.Configuration.*;
+import static com.javarush.khasanov.config.Config.*;
 
 @WebServlet(RESTART_RESOURCE)
 public class RestartServlet extends HttpServlet {

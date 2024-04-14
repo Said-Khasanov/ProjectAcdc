@@ -1,4 +1,4 @@
-package com.javarush.khasanov.configuration;
+package com.javarush.khasanov.config;
 
 import com.javarush.khasanov.exception.ProjectException;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.javarush.khasanov.configuration.Configuration.COMPONENT_CREATION_EXCEPTION;
+import static com.javarush.khasanov.config.Config.COMPONENT_CREATION_EXCEPTION;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNullElse;
 

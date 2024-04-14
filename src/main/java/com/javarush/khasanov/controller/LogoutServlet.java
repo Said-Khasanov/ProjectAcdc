@@ -8,8 +8,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static com.javarush.khasanov.configuration.Configuration.LOGIN_RESOURCE;
-import static com.javarush.khasanov.configuration.Configuration.LOGOUT_RESOURCE;
+import static com.javarush.khasanov.config.Config.LOGIN_RESOURCE;
+import static com.javarush.khasanov.config.Config.LOGOUT_RESOURCE;
 import static java.util.Objects.nonNull;
 
 @WebServlet(LOGOUT_RESOURCE)

@@ -1,6 +1,6 @@
 package com.javarush.khasanov.service;
 
-import com.javarush.khasanov.configuration.Configuration;
+import com.javarush.khasanov.config.Config;
 import com.javarush.khasanov.entity.User;
 import com.javarush.khasanov.exception.ProjectException;
 import com.javarush.khasanov.repository.UserRepository;
@@ -29,7 +29,7 @@ class UserServiceTest {
     @Test
     void whenRegisterUserAndNameIsNull_thenReturnsNonExistentId() {
         String password = "password";
-        Long expected = Configuration.NON_EXISTENT_ID;
+        Long expected = Config.NON_EXISTENT_ID;
         Long actual = userService.registerUser(null, password);
         assertEquals(expected, actual);
     }
@@ -38,7 +38,7 @@ class UserServiceTest {
     @ValueSource(strings = {"", " ", "\n", "\t"})
     void whenRegisterUserAndNameIsBlank_thenReturnsNonExistentId(String name) {
         String password = "password";
-        Long expected = Configuration.NON_EXISTENT_ID;
+        Long expected = Config.NON_EXISTENT_ID;
         Long actual = userService.registerUser(name, password);
         assertEquals(expected, actual);
     }
@@ -46,7 +46,7 @@ class UserServiceTest {
     @Test
     void whenRegisterUserAndPasswordIsNull_thenReturnsNonExistentId() {
         String name = "user";
-        Long expected = Configuration.NON_EXISTENT_ID;
+        Long expected = Config.NON_EXISTENT_ID;
         Long actual = userService.registerUser(name, null);
         assertEquals(expected, actual);
     }
@@ -55,7 +55,7 @@ class UserServiceTest {
     @ValueSource(strings = {"", " ", "\n", "\t"})
     void whenRegisterUserAndPasswordIsBlank_thenReturnsNonExistentId(String password) {
         String name = "user";
-        Long expected = Configuration.NON_EXISTENT_ID;
+        Long expected = Config.NON_EXISTENT_ID;
         Long actual = userService.registerUser(name, password);
         assertEquals(expected, actual);
     }
@@ -78,7 +78,7 @@ class UserServiceTest {
     void whenLoginNonExistentUser_thenReturnsNonExistentId() {
         String name = "";
         String password = "password";
-        Long expected = Configuration.NON_EXISTENT_ID;
+        Long expected = Config.NON_EXISTENT_ID;
         Long actual = userService.loginUser(name, password);
         assertEquals(expected, actual);
     }
@@ -96,7 +96,7 @@ class UserServiceTest {
         userRepository.get(name);
         Mockito.verify(userRepository).get(name);
 
-        Long expected = Configuration.NON_EXISTENT_ID;
+        Long expected = Config.NON_EXISTENT_ID;
         Long actual = userService.loginUser(name, "");
         assertEquals(expected, actual);
     }

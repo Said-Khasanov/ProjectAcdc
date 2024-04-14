@@ -1,4 +1,4 @@
-package com.javarush.khasanov.configuration;
+package com.javarush.khasanov.config;
 
 import com.javarush.khasanov.entity.Quest;
 
@@ -8,8 +8,10 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public final class Configuration {
-    private Configuration(){}
+public final class Config {
+    private Config() {
+    }
+
     public static final String PAGE_PREFIX = "/WEB-INF";
     public static final String PAGE_POSTFIX = ".jsp";
     public static final String HOME_RESOURCE = "/home";

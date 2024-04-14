@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
-import static com.javarush.khasanov.configuration.Configuration.*;
+import static com.javarush.khasanov.config.Config.*;
 import static java.util.Objects.*;
 
 @Slf4j

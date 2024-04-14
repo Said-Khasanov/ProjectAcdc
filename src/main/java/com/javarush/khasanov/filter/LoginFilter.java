@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static com.javarush.khasanov.configuration.Configuration.*;
+import static com.javarush.khasanov.config.Config.*;
 import static java.util.Objects.isNull;
 
 

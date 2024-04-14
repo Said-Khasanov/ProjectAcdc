@@ -9,8 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import static com.javarush.khasanov.configuration.Configuration.HOME_PAGE;
-import static com.javarush.khasanov.configuration.Configuration.HOME_RESOURCE;
+import static com.javarush.khasanov.config.Config.HOME_PAGE;
+import static com.javarush.khasanov.config.Config.HOME_RESOURCE;
 
 @WebServlet(urlPatterns = {"", HOME_RESOURCE})
 public class HomeServlet extends HttpServlet {

@@ -1,6 +1,6 @@
 package com.javarush.khasanov.controller;
 
-import com.javarush.khasanov.configuration.Components;
+import com.javarush.khasanov.config.Components;
 import com.javarush.khasanov.service.UserService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static com.javarush.khasanov.configuration.Configuration.*;
+import static com.javarush.khasanov.config.Config.*;
 
 @WebServlet(LOGIN_RESOURCE)
 public class LoginServlet extends HttpServlet {
@@ -26,17 +26,17 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String username = req.getParameter(PARAMETER_USERNAME);
         String password = req.getParameter(PARAMETER_PASSWORD);
         Long userId = userService.loginUser(username, password);
-        if (NON_EXISTENT_ID.equals(userId)) {
-            doGet(req, resp);
-        } else {
+        String resource = LOGIN_RESOURCE;
+        if (!NON_EXISTENT_ID.equals(userId)) {
             HttpSession session = req.getSession();
             session.setAttribute(ATTRIBUTE_USER_ID, userId);
             session.setAttribute(PARAMETER_USERNAME, username);
-            resp.sendRedirect(HOME_RESOURCE);
+            resource = HOME_RESOURCE;
         }
+        resp.sendRedirect(resource);
     }
 }

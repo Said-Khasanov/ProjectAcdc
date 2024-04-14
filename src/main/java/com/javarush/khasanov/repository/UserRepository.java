@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
-import static com.javarush.khasanov.configuration.Configuration.ADMIN_ID;
-import static com.javarush.khasanov.configuration.Configuration.ADMIN_USERNAME;
+import static com.javarush.khasanov.config.Config.ADMIN_ID;
+import static com.javarush.khasanov.config.Config.ADMIN_USERNAME;
 
 @Slf4j
 public class UserRepository extends AbstractRepository<User> {

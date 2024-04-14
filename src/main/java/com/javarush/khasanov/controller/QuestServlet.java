@@ -1,6 +1,6 @@
 package com.javarush.khasanov.controller;
 
-import com.javarush.khasanov.configuration.Components;
+import com.javarush.khasanov.config.Components;
 import com.javarush.khasanov.entity.Answer;
 import com.javarush.khasanov.entity.Game;
 import com.javarush.khasanov.entity.Question;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.javarush.khasanov.configuration.Configuration.*;
+import static com.javarush.khasanov.config.Config.*;
 
 @WebServlet(QUEST_RESOURCE)
 public class QuestServlet extends HttpServlet {
@@ -30,16 +30,12 @@ public class QuestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-
         Long questId = getQuestId(req);
         Game game = getUserGame(session, questId);
-
         Question question = game.getCurrentQuestion();
         List<Answer> answers = gameService.getAnswers(game, question);
-
         session.setAttribute(ATTRIBUTE_QUESTION, question);
         session.setAttribute(ATTRIBUTE_ANSWERS, answers);
-
         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(QUEST_PAGE);
         requestDispatcher.forward(req, resp);
     }
@@ -49,12 +45,11 @@ public class QuestServlet extends HttpServlet {
         HttpSession session = req.getSession();
         Long questId = getQuestId(req);
         Game game = getUserGame(session, questId);
-
         sendAnswer(req, game);
         resp.sendRedirect(QUEST_RESOURCE);
     }
 
-    private static Long getQuestId(HttpServletRequest req) {
+    private Long getQuestId(HttpServletRequest req) {
         String stringQuestId = req.getParameter(PARAMETER_QUEST_ID);
         HttpSession session = req.getSession();
         return Objects.isNull(stringQuestId)
@@ -64,7 +59,6 @@ public class QuestServlet extends HttpServlet {
 
     private void sendAnswer(HttpServletRequest req, Game game) {
         String stringAnswerId = req.getHeader(REQUEST_HEADER_ANSWER_ID);
-
         if (Objects.nonNull(stringAnswerId)) {
             Long answerId = Long.parseLong(stringAnswerId);
             gameService.sendAnswer(game, answerId);

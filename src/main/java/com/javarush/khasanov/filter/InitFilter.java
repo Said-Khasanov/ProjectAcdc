@@ -1,6 +1,6 @@
 package com.javarush.khasanov.filter;
 
-import com.javarush.khasanov.configuration.Components;
+import com.javarush.khasanov.config.Components;
 import com.javarush.khasanov.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,7 +15,8 @@ import java.io.IOException;
 public class InitFilter extends HttpFilter {
     private final UserService userService = Components.get(UserService.class);
     @Override
-    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
+    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
         userService.registerAdmin();
         chain.doFilter(req, res);
     }

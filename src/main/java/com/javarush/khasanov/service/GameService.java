@@ -6,31 +6,21 @@ import com.javarush.khasanov.repository.AnswerRepository;
 import com.javarush.khasanov.repository.GameRepository;
 import com.javarush.khasanov.repository.QuestRepository;
 import com.javarush.khasanov.repository.QuestionRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
-import static com.javarush.khasanov.configuration.Configuration.QUEST_NOT_EXISTS_EXCEPTION;
+import static com.javarush.khasanov.config.Config.QUEST_NOT_EXISTS_EXCEPTION;
 import static java.util.Objects.isNull;
 
 @Slf4j
+@RequiredArgsConstructor
 public class GameService {
     private final GameRepository gameRepository;
     private final QuestRepository questRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
-
-    public GameService(
-            GameRepository gameRepository,
-            QuestRepository questRepository,
-            QuestionRepository questionRepository,
-            AnswerRepository answerRepository
-    ) {
-        this.gameRepository = gameRepository;
-        this.questRepository = questRepository;
-        this.questionRepository = questionRepository;
-        this.answerRepository = answerRepository;
-    }
 
     public Game getUserGame(User user, Long questId) {
         Map<Long, Long> questGameMap = user.getQuestGameMap();

@@ -1,6 +1,6 @@
 package com.javarush.khasanov.controller;
 
-import com.javarush.khasanov.configuration.Components;
+import com.javarush.khasanov.config.Components;
 import com.javarush.khasanov.service.UserService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static com.javarush.khasanov.configuration.Configuration.*;
+import static com.javarush.khasanov.config.Config.*;
 
 @WebServlet(SIGNUP_RESOURCE)
 public class SignupServlet extends HttpServlet {
@@ -25,7 +25,7 @@ public class SignupServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String username = req.getParameter(PARAMETER_USERNAME);
         String password = req.getParameter(PARAMETER_PASSWORD);
         Long userId = userService.registerUser(username, password);
@@ -33,8 +33,7 @@ public class SignupServlet extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute(ATTRIBUTE_USER_ID, userId);
             session.setAttribute(ATTRIBUTE_USERNAME, username);
-            RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(HOME_PAGE);
-            requestDispatcher.forward(req, resp);
+            resp.sendRedirect(HOME_RESOURCE);
         }
     }
 }

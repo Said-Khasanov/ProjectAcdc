@@ -5,21 +5,18 @@ import com.javarush.khasanov.entity.GameState;
 import com.javarush.khasanov.entity.User;
 import com.javarush.khasanov.repository.GameRepository;
 import com.javarush.khasanov.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 public class StatisticsService {
 
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
-
-    public StatisticsService(UserRepository userRepository, GameRepository gameRepository) {
-        this.userRepository = userRepository;
-        this.gameRepository = gameRepository;
-    }
 
     public Map<String, Map<GameState, Long>> calculate() {
         ArrayList<User> users = new ArrayList<>(userRepository.getAll());
@@ -46,6 +43,4 @@ public class StatisticsService {
         }
         return statsMap;
     }
-
-
 }

@@ -1,6 +1,6 @@
 package com.javarush.khasanov.controller;
 
-import com.javarush.khasanov.configuration.Components;
+import com.javarush.khasanov.config.Components;
 import com.javarush.khasanov.entity.GameState;
 import com.javarush.khasanov.service.StatisticsService;
 import jakarta.servlet.RequestDispatcher;
@@ -14,12 +14,13 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
-import static com.javarush.khasanov.configuration.Configuration.*;
+import static com.javarush.khasanov.config.Config.*;
 
 @WebServlet(STATISTICS_RESOURCE)
 public class StatisticsServlet extends HttpServlet {
 
     private final StatisticsService statisticsService = Components.get(StatisticsService.class);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();

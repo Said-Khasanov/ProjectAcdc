@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    
+    <changeSet id="20-45-add-game_state" author="khasanov">
+        <createTable tableName="game_state">
+            <column  name="game_state"  type="int"  autoIncrement="true">
+                <constraints  primaryKey="true"  nullable="false"/>
+            </column>
+            <column name="name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="20-50-add_game_state-data" author="">
+        <insert tableName="game_state" >
+            <column name="name">PLAYING</column>
+        </insert>
+        <insert tableName="game_state" >
+            <column name="name">FINISHED</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

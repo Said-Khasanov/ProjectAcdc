@@ -46,7 +46,7 @@ public class QuestService {
         this.answerRepository = answerRepository;
         this.userRepository = userRepository;
         this.gameRepository = gameRepository;
-        //loadQuestsFromDirectory();
+        loadQuestsFromDirectory();
     }
 
     private void loadQuestsFromDirectory() {

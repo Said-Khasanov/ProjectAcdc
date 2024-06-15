@@ -18,11 +18,11 @@ public class Answer {
 
     private String text;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @ToString.Exclude
     private Question question;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "next_question_id")
     @ToString.Exclude
     private Question nextQuestion;

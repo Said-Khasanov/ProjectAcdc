@@ -4,43 +4,40 @@ import com.javarush.khasanov.entity.Game;
 import com.javarush.khasanov.entity.GameState;
 import com.javarush.khasanov.entity.User;
 import com.javarush.khasanov.repository.GameRepository;
-import com.javarush.khasanov.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
+
 
 @RequiredArgsConstructor
 public class StatisticsService {
 
-    private final UserRepository userRepository;
     private final GameRepository gameRepository;
 
     public Map<String, Map<GameState, Long>> calculate() {
-        ArrayList<User> users = new ArrayList<>(userRepository.getAll());
-        Map<String, Map<GameState, Long>> statsMap = new HashMap<>(users.size());
-        for (User user : users) {
-            Map<Long, Long> questGameMap = null;
-            Map<GameState, Long> countMap = new HashMap<>();
+        ArrayList<Game> games = new ArrayList<>(gameRepository.getAll());
+        Map<String, Map<GameState, Long>> statsMap = new HashMap<>();
 
-            countMap.put(GameState.PLAYING, 0L);
-            countMap.put(GameState.FINISHED, 0L);
+        for (Game game : games) {
+            User user = game.getUser();
+            Map<GameState, Long> countMap = statsMap.get(user.getName());
 
-            for (var entry : questGameMap.entrySet()) {
-                Long gameId = entry.getValue();
-
-                Optional<Game> optionalGame = gameRepository.get(gameId);
-                if (optionalGame.isPresent()) {
-                    Game game = optionalGame.get();
-                    GameState state = game.getState();
-                    Long count = countMap.get(state);
-                    countMap.put(state, ++count);
+            if (countMap == null) {
+                countMap = new HashMap<>();
+                for (GameState state : GameState.values()) {
+                    countMap.put(state, 0L);
                 }
             }
+
+            GameState state = game.getState();
+            Long count = countMap.get(state);
+            countMap.put(state, ++count);
             statsMap.put(user.getName(), countMap);
         }
+
         return statsMap;
     }
 }

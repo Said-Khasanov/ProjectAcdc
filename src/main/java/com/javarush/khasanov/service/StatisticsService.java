@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
 @RequiredArgsConstructor
 public class StatisticsService {
 

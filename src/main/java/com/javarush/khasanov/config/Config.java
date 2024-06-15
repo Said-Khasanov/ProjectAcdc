@@ -33,7 +33,6 @@ public final class Config {
     public static final String CREATE_QUEST_PAGE = PAGE_PREFIX + CREATE_QUEST_RESOURCE + PAGE_POSTFIX;
     public static final String PATH_TO_QUESTS = "../static/quests";
     public static final Long NON_EXISTENT_ID = 0L;
-    public static final Long ADMIN_ID = 1L;
     public static final String ADMIN_USERNAME = "admin";
     public static final String ENDING_PREFIX = "e";
     public static final String NEXT_QUESTION_SIGN = ">";
@@ -47,6 +46,10 @@ public final class Config {
                     Objects.requireNonNull(Quest.class.getResource("/")).toString()
             )
     ).getParent();
+    public final static Path CLASSES_ROOT = Paths.get(URI.create(
+            Objects.requireNonNull(
+                    ApplicationProperties.class.getResource("/")
+            ).toString()));
     public static final String QUEST_NOT_EXISTS_EXCEPTION = "Quest not exists";
     public static final String COMPONENT_CREATION_EXCEPTION = "The component could not be created";
     public static final String NOT_YOUR_OWN_QUEST_EXCEPTION = "You can't delete a quest that is not your own";

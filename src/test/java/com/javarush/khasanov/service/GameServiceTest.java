@@ -28,7 +28,7 @@ class GameServiceTest {
         questRepository = Mockito.mock(QuestRepository.class);
         questionRepository = Mockito.mock(QuestionRepository.class);
         answerRepository = Mockito.mock(AnswerRepository.class);
-        gameService = new GameService(gameRepository, questRepository, questionRepository, answerRepository);
+        gameService = new GameService(gameRepository, questRepository, answerRepository);
     }
 
 
@@ -37,9 +37,6 @@ class GameServiceTest {
         User user = Mockito.mock(User.class);
         Long gameId = 1L;
         Long questId = 1L;
-        Map<Long, Long> questGameMap = new HashMap<>();
-        questGameMap.put(questId, gameId);
-        Mockito.doReturn(questGameMap).when(user).getQuestGameMap();
         Game expected = Game.builder().build();
         Mockito.doReturn(Optional.of(expected)).when(gameRepository).get(gameId);
         Game actual = gameService.getUserGame(user, questId);
@@ -67,27 +64,21 @@ class GameServiceTest {
     @Test
     void restartGame() {
         User user = Mockito.mock(User.class);
-        Long gameId = 1L;
         Long questId = 1L;
-        Map<Long, Long> questGameMap = new HashMap<>();
-        questGameMap.put(questId, gameId);
-        Mockito.doReturn(questGameMap).when(user).getQuestGameMap();
         gameService.restartGame(user, questId);
-        Long actual = questGameMap.get(questId);
-        assertNull(actual);
+        Mockito.verify(gameRepository).delete(Mockito.any(Game.class));
     }
 
     @Test
     void whenGetAnswersWithNullGame_thenReturnsEmptyList() {
         Question question = new Question();
-        List<Answer> actual = gameService.getAnswers(null, question);
+        List<Answer> actual = gameService.getAnswers(question);
         assertEquals(Collections.emptyList(), actual);
     }
 
     @Test
     void whenGetAnswersWithNullQuestion_thenReturnsEmptyList() {
-        Game game = Game.builder().build();
-        List<Answer> actual = gameService.getAnswers(game, null);
+        List<Answer> actual = gameService.getAnswers(null);
         assertEquals(Collections.emptyList(), actual);
     }
 
@@ -98,7 +89,6 @@ class GameServiceTest {
         Long nextQuestionId = 2L;
         Answer answer = Answer.builder()
                 .id(answerId)
-                .nextQuestionId(nextQuestionId)
                 .build();
         Mockito.doReturn(Optional.of(answer)).when(answerRepository).get(answerId);
 

@@ -1,42 +1,72 @@
 package com.javarush.khasanov.repository;
 
-import com.javarush.khasanov.entity.Identifiable;
+
+import com.javarush.khasanov.config.SessionFactoryCreator;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
-public abstract class AbstractRepository<T extends Identifiable> implements Repository<T> {
-    protected final Map<Long, T> map = new ConcurrentHashMap<>();
-    public final AtomicLong id = new AtomicLong();
+@RequiredArgsConstructor
+public abstract class AbstractRepository<T> implements Repository<T> {
+    protected final Class<T> entityClass;
+    protected final SessionFactoryCreator sessionFactoryCreator;
 
     @Override
-    public void create(T entity) {
-        entity.setId(id.incrementAndGet());
-        map.put(entity.getId(), entity);
+    public T create(T entity) {
+        try (Session session = sessionFactoryCreator.getSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.save(entity);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+            }
+            return entity;
+        }
     }
 
     @Override
     public void update(T entity) {
-        map.put(entity.getId(), entity);
+        try (Session session = sessionFactoryCreator.getSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.update(entity);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+            }
+        }
     }
 
     @Override
     public void delete(T entity) {
-        map.remove(entity.getId());
+        try (Session session = sessionFactoryCreator.getSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.remove(entity);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+            }
+        }
     }
 
     @Override
     public Optional<T> get(Long id) {
-        id = Objects.requireNonNullElse(id, 0L);
-        return Optional.ofNullable(map.get(id));
+        try (Session session = sessionFactoryCreator.getSession()) {
+            return Optional.ofNullable(session.get(entityClass, id));
+        }
     }
 
     @Override
     public Collection<T> getAll() {
-        return map.values();
+        try (Session session = sessionFactoryCreator.getSession()) {
+            Query<T> query = session.createQuery("SELECT e FROM %s e".formatted(entityClass.getName()), entityClass);
+            return query.list();
+        }
     }
 }

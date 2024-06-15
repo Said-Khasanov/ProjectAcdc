@@ -11,7 +11,7 @@ public class LiquibaseInit {
         Scope.child(Scope.Attr.resourceAccessor, new ClassLoaderResourceAccessor(), () -> {
             CommandScope update = new CommandScope("update");
 
-            update.addArgumentValue("changelogFile", "db/changelog.xml");
+            update.addArgumentValue("changelogFile", "db/changelog/2024/06/15-01-changelog.xml");
             update.addArgumentValue("url", "jdbc:postgresql://localhost:5432/dev");
             update.addArgumentValue("username", "admin");
             update.addArgumentValue("password", "admin");

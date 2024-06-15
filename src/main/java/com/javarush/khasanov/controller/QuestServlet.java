@@ -33,7 +33,7 @@ public class QuestServlet extends HttpServlet {
         Long questId = getQuestId(req);
         Game game = getUserGame(session, questId);
         Question question = game.getCurrentQuestion();
-        List<Answer> answers = gameService.getAnswers(game, question);
+        List<Answer> answers = gameService.getAnswers(question);
         session.setAttribute(ATTRIBUTE_QUESTION, question);
         session.setAttribute(ATTRIBUTE_ANSWERS, answers);
         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(QUEST_PAGE);

@@ -1,18 +1,34 @@
 package com.javarush.khasanov.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Game implements Identifiable {
+@Entity
+@Table(name = "game")
+public class Game {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "quest_id")
     private Quest quest;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "current_question_id")
     private Question currentQuestion;
+
+    @Enumerated(EnumType.STRING)
     @Builder.Default
     private GameState state = GameState.PLAYING;
 }

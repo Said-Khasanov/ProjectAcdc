@@ -22,8 +22,7 @@ import static java.util.Objects.isNull;
 public class LoginFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
-            throws IOException, ServletException
-    {
+            throws IOException, ServletException {
         HttpSession session = req.getSession();
         Long userId = (Long) session.getAttribute(ATTRIBUTE_USER_ID);
         if (isNull(userId)) {

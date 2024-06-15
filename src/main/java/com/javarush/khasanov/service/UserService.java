@@ -27,7 +27,7 @@ public class UserService {
                 .password(password)
                 .build();
         userRepository.create(user);
-        log.info("Пользователь {} зарегистрирован", name);
+        log.info("Пользователь {} зарегистрирован", user);
         return user.getId();
     }
 

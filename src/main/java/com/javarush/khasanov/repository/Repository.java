@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface Repository<T> {
-    void create(T entity);
+    T create(T entity);
 
     void update(T entity);
 

@@ -22,7 +22,7 @@ public class StatisticsService {
         ArrayList<User> users = new ArrayList<>(userRepository.getAll());
         Map<String, Map<GameState, Long>> statsMap = new HashMap<>(users.size());
         for (User user : users) {
-            Map<Long, Long> questGameMap = user.getQuestGameMap();
+            Map<Long, Long> questGameMap = null;
             Map<GameState, Long> countMap = new HashMap<>();
 
             countMap.put(GameState.PLAYING, 0L);

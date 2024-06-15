@@ -1,14 +1,36 @@
 package com.javarush.khasanov.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
-public class Question implements Identifiable {
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "question")
+public class Question {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
-    private boolean isEnding;
+
+    @Column(name = "ending")
+    @Builder.Default
+    private boolean isEnding = false;
+
+    @ManyToOne
+    @ToString.Exclude
+    private Quest quest;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private List<Answer> answers = new ArrayList<>();
 }

@@ -1,5 +1,7 @@
 package com.javarush.khasanov.repository;
 
+import com.javarush.khasanov.config.ApplicationProperties;
+import com.javarush.khasanov.config.SessionFactoryCreator;
 import com.javarush.khasanov.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,9 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        userRepository = Mockito.spy(new UserRepository());
+        ApplicationProperties applicationProperties = new ApplicationProperties();
+        SessionFactoryCreator sessionFactoryCreator = new SessionFactoryCreator(applicationProperties);
+        userRepository = Mockito.spy(new UserRepository(sessionFactoryCreator));
     }
 
     @Test

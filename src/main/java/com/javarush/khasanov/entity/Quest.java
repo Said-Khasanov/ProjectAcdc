@@ -1,20 +1,35 @@
 package com.javarush.khasanov.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
-public class Quest implements Identifiable {
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "quest")
+public class Quest {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
-    private final Map<Question, List<Answer>> questions = new HashMap<>();
+
+    @OneToOne
+    @JoinColumn(name = "first_question_id")
     private Question firstQuestion;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
     private User author;
+
+    @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private List<Question> questions = new ArrayList<>();
 }

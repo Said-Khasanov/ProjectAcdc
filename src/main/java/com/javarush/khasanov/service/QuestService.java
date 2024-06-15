@@ -5,10 +5,7 @@ import com.javarush.khasanov.entity.Quest;
 import com.javarush.khasanov.entity.Question;
 import com.javarush.khasanov.entity.User;
 import com.javarush.khasanov.exception.ProjectException;
-import com.javarush.khasanov.repository.AnswerRepository;
-import com.javarush.khasanov.repository.QuestRepository;
-import com.javarush.khasanov.repository.QuestionRepository;
-import com.javarush.khasanov.repository.UserRepository;
+import com.javarush.khasanov.repository.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -35,18 +32,21 @@ public class QuestService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final UserRepository userRepository;
+    private final GameRepository gameRepository;
 
     public QuestService(
             QuestRepository questRepository,
             QuestionRepository questionRepository,
             AnswerRepository answerRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            GameRepository gameRepository
     ) {
         this.questRepository = questRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.userRepository = userRepository;
-        loadQuestsFromDirectory();
+        this.gameRepository = gameRepository;
+        //loadQuestsFromDirectory();
     }
 
     private void loadQuestsFromDirectory() {
@@ -67,8 +67,9 @@ public class QuestService {
         if (path.toFile().isFile()) {
             try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
                 Quest quest = parseQuest(bufferedReader);
-                quest.setAuthor(userRepository.getAdmin());
-                questRepository.create(quest);
+                User admin = userRepository.getAdmin();
+                quest.setAuthor(admin);
+                questRepository.update(quest);
             } catch (IOException e) {
                 log.error("Ошибка при загрузке начальных квестов. Файл {}", path.getFileName());
                 throw new ProjectException(e);
@@ -83,9 +84,9 @@ public class QuestService {
         try (StringReader stringReader = new StringReader(text)) {
             Quest quest = parseQuest(stringReader);
             quest.setAuthor(author);
-            questRepository.create(quest);
+            questRepository.update(quest);
         }
-        log.info("Создан квест пользователем userId={}", author.getId());
+        log.info("Создан квест пользователем {}", author);
         return true;
     }
 
@@ -106,16 +107,18 @@ public class QuestService {
                     parseTitle(titleMatcher, line, quest);
                 } else if (questionMatcher.find()) {
                     if (!answerList.isEmpty() || currentQuestion.isEnding()) {
-                        quest.getQuestions().put(currentQuestion, new ArrayList<>(answerList));
+                        quest.getQuestions().add(currentQuestion);
                         answerList.clear();
                     }
                     currentQuestion = parseQuestion(questionMatcher, line, tagQuestionMap);
+                    currentQuestion.setQuest(quest);
+                    questionRepository.create(currentQuestion);
                     if (isNull(quest.getFirstQuestion())) {
                         quest.setFirstQuestion(currentQuestion);
                     }
                 } else if (answerMatcher.find()) {
                     Answer answer = parseAnswer(answerMatcher, line, tagAnswerMap);
-                    answerRepository.create(answer);
+                    answer.setQuestion(currentQuestion);
                     answerList.add(answer);
                 }
             }
@@ -134,9 +137,10 @@ public class QuestService {
                 if (nextQuestion.isEnding()) {
                     answer.setDeadEnd(true);
                 }
-                answer.setNextQuestionId(nextQuestion.getId());
-                answerRepository.update(answer);
+                answer.setNextQuestion(nextQuestion);
+                answerRepository.create(answer);
             }
+
         }
     }
 
@@ -167,7 +171,6 @@ public class QuestService {
             question.setEnding(true);
         }
 
-        questionRepository.create(question);
         questions.put(tag, question);
         return question;
     }
@@ -176,6 +179,7 @@ public class QuestService {
         int startIndex = titleMatcher.end();
         String titleText = line.substring(startIndex);
         quest.setTitle(titleText);
+        questRepository.create(quest);
     }
 
     public List<Quest> getAllQuests() {
@@ -185,13 +189,13 @@ public class QuestService {
     public void deleteQuest(Long questId, Long userId) {
         User user = userRepository.get(userId).orElseThrow();
         Quest quest = questRepository.get(questId).orElseThrow();
-        if (!quest.getAuthor().equals(user)) {
-            log.error("Попытка удалить чужой квест questId={} пользователем userId={}", questId, userId);
+        Long authorId = quest.getAuthor().getId();
+        if (!userId.equals(authorId)) {
+            log.error("Попытка удалить чужой квест {} пользователем {}", quest, user);
             throw new ProjectException(NOT_YOUR_OWN_QUEST_EXCEPTION);
         }
-        log.info("Удалён квест questId={} пользователем userId={}", questId, userId);
+        gameRepository.deleteByQuestId(questId);
         questRepository.delete(quest);
+        log.info("Удалён квест {} пользователем {}", quest, user);
     }
-
-
 }

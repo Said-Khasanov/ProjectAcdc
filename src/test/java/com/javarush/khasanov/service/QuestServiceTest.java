@@ -3,10 +3,7 @@ package com.javarush.khasanov.service;
 import com.javarush.khasanov.entity.Quest;
 import com.javarush.khasanov.entity.User;
 import com.javarush.khasanov.exception.ProjectException;
-import com.javarush.khasanov.repository.AnswerRepository;
-import com.javarush.khasanov.repository.QuestRepository;
-import com.javarush.khasanov.repository.QuestionRepository;
-import com.javarush.khasanov.repository.UserRepository;
+import com.javarush.khasanov.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,7 +24,14 @@ class QuestServiceTest {
         QuestionRepository questionRepository = Mockito.mock(QuestionRepository.class);
         AnswerRepository answerRepository = Mockito.mock(AnswerRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
-        questService = new QuestService(questRepository, questionRepository, answerRepository, userRepository);
+        GameRepository gameRepository = Mockito.mock(GameRepository.class);
+        questService = new QuestService(
+                questRepository,
+                questionRepository,
+                answerRepository,
+                userRepository,
+                gameRepository
+        );
     }
 
     @Test

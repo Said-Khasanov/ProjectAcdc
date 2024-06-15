@@ -14,6 +14,7 @@ import java.io.IOException;
 @WebFilter("/*")
 public class InitFilter extends HttpFilter {
     private final UserService userService = Components.get(UserService.class);
+
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {

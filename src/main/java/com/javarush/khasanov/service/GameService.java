@@ -5,39 +5,28 @@ import com.javarush.khasanov.exception.ProjectException;
 import com.javarush.khasanov.repository.AnswerRepository;
 import com.javarush.khasanov.repository.GameRepository;
 import com.javarush.khasanov.repository.QuestRepository;
-import com.javarush.khasanov.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 import static com.javarush.khasanov.config.Config.QUEST_NOT_EXISTS_EXCEPTION;
-import static java.util.Objects.isNull;
 
 @Slf4j
 @RequiredArgsConstructor
 public class GameService {
     private final GameRepository gameRepository;
     private final QuestRepository questRepository;
-    private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
 
     public Game getUserGame(User user, Long questId) {
-        Map<Long, Long> questGameMap = user.getQuestGameMap();
-        Long gameId = questGameMap.get(questId);
-        Optional<Game> optionalGame = gameRepository.get(gameId);
-        if (optionalGame.isEmpty()) {
-            Game game = createGame(questId);
-            questGameMap.put(questId, game.getId());
-            gameRepository.update(game);
-            return game;
-        }
-        return optionalGame.get();
+        Optional<Game> optionalGame = gameRepository.getByUserAndQuestId(user, questId);
+        return optionalGame.orElseGet(() -> createGame(user, questId));
     }
 
     public void restartGame(User user, Long questId) {
-        Map<Long, Long> questGameMap = user.getQuestGameMap();
-        questGameMap.remove(questId);
+        gameRepository.getByUserAndQuestId(user, questId).ifPresent(gameRepository::delete);
     }
 
     private Quest getQuest(Long questId) {
@@ -49,37 +38,24 @@ public class GameService {
         return optionalQuest.get();
     }
 
-    private Game createGame(Long questId) {
+    private Game createGame(User user, Long questId) {
         Quest quest = getQuest(questId);
         Question firstQuestion = quest.getFirstQuestion();
-        Game game = Game.builder()
-                .quest(quest)
-                .currentQuestion(firstQuestion)
-                .build();
+        Game game = Game.builder().quest(quest).currentQuestion(firstQuestion).build();
+        game.setUser(user);
         gameRepository.create(game);
         return game;
     }
 
-    public List<Answer> getAnswers(Game game, Question question) {
-        if (isNull(game) || isNull(question)) {
-            return Collections.emptyList();
-        }
-        Quest quest = game.getQuest();
-        Map<Question, List<Answer>> questions = quest.getQuestions();
-        List<Answer> answers = questions.get(question);
-        return Objects.requireNonNullElse(answers, Collections.emptyList());
+    public List<Answer> getAnswers(Question question) {
+        return question.getAnswers();
     }
 
     public void sendAnswer(Game game, Long answerId) {
-        Optional<Answer> optionalAnswer = answerRepository.get(answerId);
-        Answer answer = optionalAnswer.orElseThrow();
-        Long idNextQuestion = answer.getNextQuestionId();
-
-        Optional<Question> optionalQuestion = questionRepository.get(idNextQuestion);
-        Question nextQuestion = optionalQuestion.orElseThrow();
-
+        Answer answer = answerRepository.get(answerId).orElseThrow();
+        Question nextQuestion = answer.getNextQuestion();
         game.setCurrentQuestion(nextQuestion);
-
+        gameRepository.update(game);
         if (answer.isDeadEnd()) {
             finishGame(game);
         }
@@ -87,6 +63,7 @@ public class GameService {
 
     public void finishGame(Game game) {
         game.setState(GameState.FINISHED);
+        gameRepository.update(game);
     }
 
 }

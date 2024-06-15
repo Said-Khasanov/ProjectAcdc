@@ -20,7 +20,7 @@ public abstract class AbstractRepository<T> implements Repository<T> {
         try (Session session = sessionFactoryCreator.getSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                session.save(entity);
+                session.persist(entity);
                 transaction.commit();
             } catch (Exception e) {
                 transaction.rollback();

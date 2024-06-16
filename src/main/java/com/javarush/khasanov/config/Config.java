@@ -66,4 +66,10 @@ public final class Config {
     public static final String ATTRIBUTE_USERNAME = "username";
     public static final String ATTRIBUTE_STATISTICS_MAP = "statsMap";
     public static final String REQUEST_HEADER_ANSWER_ID = "answerId";
+    public static final String DOCKER_IMAGE_NAME = "postgres:16.3";
+    public static final String HIBERNATE_CONNECTION_DRIVER_CLASS = "hibernate.connection.driver_class";
+    public static final String HIBERNATE_CONNECTION_URL = "hibernate.connection.url";
+    public static final String HIBERNATE_CONNECTION_USERNAME = "hibernate.connection.username";
+    public static final String HIBERNATE_CONNECTION_PASSWORD = "hibernate.connection.password";
+
 }

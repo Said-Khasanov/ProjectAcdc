@@ -8,10 +8,12 @@ import com.javarush.khasanov.repository.QuestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static com.javarush.khasanov.config.Config.QUEST_NOT_EXISTS_EXCEPTION;
+import static java.util.Objects.isNull;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,6 +50,9 @@ public class GameService {
     }
 
     public List<Answer> getAnswers(Question question) {
+        if (isNull(question)) {
+            return Collections.emptyList();
+        }
         return question.getAnswers();
     }
 

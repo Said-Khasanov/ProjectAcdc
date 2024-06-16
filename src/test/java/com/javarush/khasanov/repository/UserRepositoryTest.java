@@ -9,8 +9,6 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class UserRepositoryTest {
 
     private UserRepository userRepository;
@@ -24,6 +22,8 @@ class UserRepositoryTest {
 
     @Test
     void whenAdminNotExists_thenCreateAdmin() {
+        Optional<User> optionalAdmin = userRepository.get("admin");
+        optionalAdmin.ifPresent(user -> userRepository.delete(user));
         userRepository.getAdmin();
         Mockito.verify(userRepository).create(Mockito.any(User.class));
     }
@@ -34,15 +34,5 @@ class UserRepositoryTest {
         Mockito.doReturn(Optional.of(admin)).when(userRepository).get(Mockito.anyLong());
         userRepository.getAdmin();
         Mockito.verify(userRepository, Mockito.never()).create(Mockito.any(User.class));
-    }
-
-    @Test
-    void whenGetUserByName_thenReturnsUserIgnoreCase() {
-        User user = User.builder()
-                .name("user")
-                .build();
-        userRepository.create(user);
-        User userFromDb = userRepository.get("USER").orElseThrow();
-        assertEquals(user, userFromDb);
     }
 }

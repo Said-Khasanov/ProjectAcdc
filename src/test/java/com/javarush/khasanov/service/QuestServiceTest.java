@@ -36,7 +36,7 @@ class QuestServiceTest {
 
     @Test
     void createQuestFromText() {
-        questService.createQuestFromText("quest text", User.builder().build());
+        questService.createQuestFromText("t: quest text", User.builder().build());
         Mockito.verify(questRepository).create(Mockito.any(Quest.class));
     }
 

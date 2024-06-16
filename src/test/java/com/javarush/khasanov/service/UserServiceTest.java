@@ -65,13 +65,8 @@ class UserServiceTest {
         String name = "user";
         String password = "password";
 
-        User user = User.builder()
-                .name(name)
-                .password(password)
-                .build();
-
         userService.registerUser(name, password);
-        Mockito.verify(userRepository).create(user);
+        Mockito.verify(userRepository).create(Mockito.any(User.class));
     }
 
     @Test

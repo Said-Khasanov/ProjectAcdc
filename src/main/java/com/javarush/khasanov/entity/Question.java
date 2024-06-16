@@ -32,5 +32,6 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
+    @Builder.Default
     private List<Answer> answers = new ArrayList<>();
 }

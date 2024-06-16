@@ -5,20 +5,21 @@ import com.javarush.khasanov.exception.ProjectException;
 import com.javarush.khasanov.repository.AnswerRepository;
 import com.javarush.khasanov.repository.GameRepository;
 import com.javarush.khasanov.repository.QuestRepository;
-import com.javarush.khasanov.repository.QuestionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GameServiceTest {
 
     private GameRepository gameRepository;
     private QuestRepository questRepository;
-    private QuestionRepository questionRepository;
     private AnswerRepository answerRepository;
     private GameService gameService;
 
@@ -26,7 +27,6 @@ class GameServiceTest {
     void setUp() {
         gameRepository = Mockito.mock(GameRepository.class);
         questRepository = Mockito.mock(QuestRepository.class);
-        questionRepository = Mockito.mock(QuestionRepository.class);
         answerRepository = Mockito.mock(AnswerRepository.class);
         gameService = new GameService(gameRepository, questRepository, answerRepository);
     }
@@ -35,10 +35,9 @@ class GameServiceTest {
     @Test
     void getUserGame() {
         User user = Mockito.mock(User.class);
-        Long gameId = 1L;
         Long questId = 1L;
         Game expected = Game.builder().build();
-        Mockito.doReturn(Optional.of(expected)).when(gameRepository).get(gameId);
+        Mockito.doReturn(Optional.of(expected)).when(gameRepository).getByUserAndQuestId(user, questId);
         Game actual = gameService.getUserGame(user, questId);
         assertEquals(expected, actual);
     }
@@ -65,6 +64,8 @@ class GameServiceTest {
     void restartGame() {
         User user = Mockito.mock(User.class);
         Long questId = 1L;
+        Game game = Game.builder().build();
+        Mockito.doReturn(Optional.of(game)).when(gameRepository).getByUserAndQuestId(user, questId);
         gameService.restartGame(user, questId);
         Mockito.verify(gameRepository).delete(Mockito.any(Game.class));
     }
@@ -86,15 +87,13 @@ class GameServiceTest {
     void sendAnswer() {
         Game game = Game.builder().build();
         Long answerId = 1L;
-        Long nextQuestionId = 2L;
+        Question expected = new Question();
+
         Answer answer = Answer.builder()
                 .id(answerId)
+                .nextQuestion(expected)
                 .build();
         Mockito.doReturn(Optional.of(answer)).when(answerRepository).get(answerId);
-
-        Question expected = new Question();
-        expected.setId(nextQuestionId);
-        Mockito.doReturn(Optional.of(expected)).when(questionRepository).get(nextQuestionId);
 
         gameService.sendAnswer(game, answerId);
         Question actual = game.getCurrentQuestion();

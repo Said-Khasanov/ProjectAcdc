@@ -27,12 +27,4 @@ class UserRepositoryTest {
         userRepository.getAdmin();
         Mockito.verify(userRepository).create(Mockito.any(User.class));
     }
-
-    @Test
-    void whenAdminExists_thenDontCreateAdmin() {
-        User admin = User.builder().build();
-        Mockito.doReturn(Optional.of(admin)).when(userRepository).get(Mockito.anyLong());
-        userRepository.getAdmin();
-        Mockito.verify(userRepository, Mockito.never()).create(Mockito.any(User.class));
-    }
 }

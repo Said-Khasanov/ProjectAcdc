@@ -11,13 +11,8 @@ public class SessionFactoryCreator {
     private Session session;
 
     public SessionFactoryCreator(ApplicationProperties applicationProperties) {
-        Configuration configuration = new Configuration();        //1. hibernate.properties
-        // configuration.configure();                             //2. hibernate.cfg.xml
-        // Properties properties = configuration.getProperties(); //3.1 prepare for read
-        // properties.load(SessionFactory.class.getResourceAsStream("/application.properties")); //3.2 your
-        // configuration.addProperties(properties);               //3.3 application.properties
-        // configuration.add????Resource()                        //and 100500 other ways
-        configuration.addProperties(applicationProperties); //use 3.3 - my ApplicationProperties
+        Configuration configuration = new Configuration();
+        configuration.addProperties(applicationProperties);
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Quest.class);
         configuration.addAnnotatedClass(Question.class);
